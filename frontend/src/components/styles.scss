@@ -1,0 +1,33 @@
+.BoxCreate {
+    display: flex;
+    width: 100%;
+    background-color: #00003f;
+    margin-bottom: 10px;
+}
+
+.BoxCreate_Typography {
+    margin-left: 20px;
+    color: white; 
+}
+
+.BoxCreate_bottom {
+    display: flex;
+    width: 100%;
+    box-shadow: 3px 3px 3px 0px rgba(0,0,0,0.75);
+    padding: 4px;
+    flex-direction: column;
+}
+
+.BoxCreate_bottom_intern{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.BoxCreate_button_box{
+    width: 30%;
+}
+
+.BoxCreate_button_box_button{
+    width: 100%;
+}
