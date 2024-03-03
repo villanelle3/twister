@@ -5,11 +5,36 @@ import MyTextField from "./forms/MyTextField"
 import MySelectField from "./forms/MySelectField"
 import MyMultLineField from "./forms/MyMultLineField"
 import { useForm } from 'react-hook-form';
+import AxiosInstance from "./Axios"
+import DayJs from "dayjs"
+import { useNavigate } from 'react-router-dom';
 import './styles.scss'; 
 
 function Create() {
-    const {handleSubmit, reset, setValue, control} = useForm()
-    const submission = (data) => console.log(data)
+    const navigate = useNavigate()
+    const defaultValues = {
+        name:"",
+        comments: "",
+        status: "",
+    }
+    const {handleSubmit, reset, setValue, control} = useForm({defaultValues:defaultValues})
+    const submission = (data) => 
+    {
+        const StartDate = DayJs(data.start_date["d"]).format("YYYY-MM-DD")
+        const EndDate = DayJs(data.end_date["d"]).format("YYYY-MM-DD")
+        AxiosInstance.post(
+            `project/`,{
+                name: data.name,
+                status: data.status,
+                comments: data.comments,
+                start_data: StartDate,
+                end_data: EndDate,
+            }
+        )
+        .then((res) => {
+            navigate(`/`)
+        })
+    }
     return (
         <div>
             <form onSubmit={handleSubmit(submission)}>
@@ -62,7 +87,6 @@ function Create() {
                         </Box>
                     </Box>
                 </Box>
-
             </form>
         </div>
     )
