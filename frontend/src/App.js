@@ -5,6 +5,7 @@ import {
 import Home from "./components/Home"
 import About from "./components/About"
 import Create from "./components/Create"
+import Edit from "./components/Edit"
 import NavBar from "./components/NavBar"
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
             <Route path="" element={<Home/>} />
             <Route path="/create" element={<Create/>} />
             <Route path="/about" element={<About/>} />
+            <Route path="/edit/:id" element={<Edit/>} />
           </Routes>
         }
       />
