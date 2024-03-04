@@ -4,6 +4,7 @@ import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { Box, IconButton } from "@mui/material"
 import { Edit as EditIcon, Delete as DeleteIcon, } from '@mui/icons-material';
 import Dayjs from "dayjs"
+import { Link } from "react-router-dom"
 
 function Home() {
     const [mydata, setMydata] = useState([]);
@@ -49,9 +50,9 @@ function Home() {
                 header: 'Actions',
                 size: 180,
                 accessorFn: () => null, // No need for an accessor function here
-                Cell: () => (
+                Cell: ({row}) => (
                     <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
-                        <IconButton color="secondary">
+                        <IconButton color="secondary" LinkComponent={Link} to={`edit/${row.original.id}`}>
                             <EditIcon />
                         </IconButton>
                         <IconButton color="error">
