@@ -17,7 +17,7 @@ function Create() {
         comments: "",
         status: "",
     }
-    const {handleSubmit, reset, setValue, control} = useForm({defaultValues:defaultValues})
+    const {handleSubmit, control} = useForm({defaultValues:defaultValues})
     const submission = (data) => 
     {
         const StartDate = DayJs(data.start_date["d"]).format("YYYY-MM-DD")
