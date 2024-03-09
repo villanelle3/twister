@@ -6,6 +6,7 @@ import Home from "./components/Home"
 import About from "./components/About"
 import Create from "./components/Create"
 import Edit from "./components/Edit"
+import Delete from "./components/Delete"
 import NavBar from "./components/NavBar"
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/create" element={<Create/>} />
             <Route path="/about" element={<About/>} />
             <Route path="/edit/:id" element={<Edit/>} />
+            <Route path="/delete/:id" element={<Delete/>} />
           </Routes>
         }
       />

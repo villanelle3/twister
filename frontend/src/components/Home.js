@@ -55,7 +55,7 @@ function Home() {
                         <IconButton color="secondary" LinkComponent={Link} to={`edit/${row.original.id}`}>
                             <EditIcon />
                         </IconButton>
-                        <IconButton color="error">
+                        <IconButton color="error" LinkComponent={Link} to={`delete/${row.original.id}`}>
                             <DeleteIcon />
                         </IconButton>
                     </Box>
