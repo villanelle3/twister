@@ -8,33 +8,48 @@ import { useForm } from 'react-hook-form';
 import AxiosInstance from "./Axios"
 import DayJs from "dayjs"
 import { useNavigate } from 'react-router-dom';
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 import './styles.scss'; 
 
 function Create() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const defaultValues = {
-        name:"",
+        name: "",
         comments: "",
         status: "",
-    }
-    const {handleSubmit, control} = useForm({defaultValues:defaultValues})
-    const submission = (data) => 
-    {
-        const StartDate = DayJs(data.start_date["d"]).format("YYYY-MM-DD")
-        const EndDate = DayJs(data.end_date["d"]).format("YYYY-MM-DD")
+        start_date: null,
+        end_date: null
+    };
+
+    const schema = yup.object({
+        name: yup.string().required("Name is required"),
+        status: yup.string().required("Status is required!"),
+        comments: yup.string(),
+        start_date: yup.date().required("Start date is required!"),
+        end_date: yup.date().required("End date is required!")
+            .min(yup.ref("start_date"), "End date cannot be before start date!")
+    });
+
+    const { handleSubmit, control } = useForm({
+        defaultValues: defaultValues,
+        resolver: yupResolver(schema)
+    });
+
+    const submission = (data) => {
         AxiosInstance.post(
-            `project/`,{
-                name: data.name,
-                status: data.status,
-                comments: data.comments,
-                start_data: StartDate,
-                end_data: EndDate,
-            }
-        )
-        .then((res) => {
-            navigate(`/`)
+            `project/`, {
+            name: data.name,
+            status: data.status,
+            comments: data.comments,
+            start_data: DayJs(data.start_date).format("YYYY-MM-DD"),
+            end_data: DayJs(data.end_date).format("YYYY-MM-DD"),
         })
-    }
+            .then((res) => {
+                navigate(`/`);
+            });
+    };
+
     return (
         <div>
             <form onSubmit={handleSubmit(submission)}>
@@ -47,36 +62,36 @@ function Create() {
                 <Box className="BoxCreate_bottom">
                     <Box className="BoxCreate_bottom_intern">
                         <MyTextField
-                            label="Name" 
-                            placeholder="Provide a project name" 
-                            name="name" 
+                            label="Name"
+                            placeholder="Provide a project name"
+                            name="name"
                             control={control}
                             width={"30%"}
                         />
                         <MyDatePickerField
-                            label="Start date" 
-                            name="start_date" 
+                            label="Start date"
+                            name="start_date"
                             control={control}
                             width={"30%"}
                         />
                         <MyDatePickerField
-                            label="End date" 
-                            name="end_date" 
+                            label="End date"
+                            name="end_date"
                             control={control}
                             width={"30%"}
                         />
                     </Box>
                     <Box className="BoxCreate_bottom_intern">
                         <MyMultLineField
-                            label="Comments" 
-                            placeholder="Provide project comments" 
-                            name="comments" 
+                            label="Comments"
+                            placeholder="Provide project comments"
+                            name="comments"
                             control={control}
                             width={"30%"}
                         />
                         <MySelectField
-                            label="Status" 
-                            name="status" 
+                            label="Status"
+                            name="status"
                             control={control}
                             width={"30%"}
                         />
@@ -89,8 +104,7 @@ function Create() {
                 </Box>
             </form>
         </div>
-    )
+    );
 }
 
 export default Create;
-
