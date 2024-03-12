@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Button, Typography } from "@mui/material"
 import MyDatePickerField from "./forms/MyDatePickerField"
 import MyTextField from "./forms/MyTextField"
@@ -13,6 +13,22 @@ import * as yup from "yup"
 import './styles.scss'; 
 
 function Create() {
+    const [projectmaneger, setProjectmaneger] = useState([]);
+    const hardcoded_options = [
+        {id:"", name:"None"},
+        {id:"Open", name:"Open"},
+        {id:"In progress", name:"In progress"},
+        {id:"Completed", name:"Completed"}
+    ]
+    const GetData = () => {
+        AxiosInstance.get('projectmaneger/').then((res) => {
+            setProjectmaneger(res.data);
+        });
+    };
+    useEffect(() => {
+        GetData();
+    }, []);
+
     const navigate = useNavigate();
     const defaultValues = {
         name: "",
@@ -24,6 +40,7 @@ function Create() {
 
     const schema = yup.object({
         name: yup.string().required("Name is required"),
+        projectmaneger: yup.string().required("It is required"),
         status: yup.string().required("Status is required!"),
         comments: yup.string(),
         start_date: yup.date().required("Start date is required!"),
@@ -40,6 +57,7 @@ function Create() {
         AxiosInstance.post(
             `project/`, {
             name: data.name,
+            projectmaneger: data.projectmaneger,
             status: data.status,
             comments: data.comments,
             start_data: DayJs(data.start_date).format("YYYY-MM-DD"),
@@ -94,14 +112,22 @@ function Create() {
                             name="status"
                             control={control}
                             width={"30%"}
+                            options={hardcoded_options}
                         />
-                        <Box className="BoxCreate_button_box">
-                            <Button variant='contained' type='submit' className="BoxCreate_button_box_button">
-                                Submit
-                            </Button>
-                        </Box>
+                            <MySelectField
+                                label="Project Maneger"
+                                name="projectmaneger"
+                                control={control}
+                                width={"30%"}
+                                options={projectmaneger}
+                            />
                     </Box>
-                </Box>
+                    <Box className="BoxCreate_button_box">
+                        <Button variant='contained' type='submit' className="BoxCreate_button_box_button">
+                            Submit
+                        </Button>
+                    </Box>
+                </Box> 
             </form>
         </div>
     );

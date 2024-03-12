@@ -8,7 +8,7 @@ import { Controller } from "react-hook-form";
 import { useTheme } from '@mui/material/styles';
 
 export default function MySelectField(props) {
-    const { label, name, control, width } = props;
+    const { label, name, control, width, options } = props;
     const theme = useTheme();
 
     return (
@@ -25,12 +25,16 @@ export default function MySelectField(props) {
                             value={value}
                             onChange={onChange}
                         >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={"Open"}>Open</MenuItem>
+                            {
+                                options.map((option) => (
+                                    <MenuItem value={option.id}>
+                                        <em>{option.name}</em>
+                                    </MenuItem>
+                                ))
+                            }
+                            {/* <MenuItem value={"Open"}>Open</MenuItem>
                             <MenuItem value={"In progress"}>In progress</MenuItem>
-                            <MenuItem value={"Completed"}>Completed</MenuItem>
+                            <MenuItem value={"Completed"}>Completed</MenuItem> */}
                         </Select>
                         {error && <FormHelperText sx={{ color: theme.palette.error.main }}>{error.message}</FormHelperText>}
                     </>
