@@ -17,7 +17,6 @@ import InfoIcon from "@mui/icons-material/Info";
 import CreateIcon from "@mui/icons-material/Create";
 import { Link, useLocation } from "react-router-dom";
 
-
 function NavBar(props) {
     const { window, drawerWidth, content } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -34,7 +33,7 @@ function NavBar(props) {
 
     const handleDrawerToggle = () => {
         if (!isClosing) {
-        setMobileOpen(!mobileOpen);
+            setMobileOpen(!mobileOpen);
         }
     };
 
@@ -42,103 +41,100 @@ function NavBar(props) {
     const path = location.pathname;
 
     const drawer = (
-    <div>
-        <Toolbar />
-        <List>
-            <ListItem disablePadding>
-            <ListItemButton component={Link} to="/" selected={"/" === path}>
-                <ListItemIcon>
-                <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Home"} />
-            </ListItemButton>
-            </ListItem>
-        <ListItem disablePadding>
-            <ListItemButton component={Link} to="/about" selected={"/about" === path}>
-                <ListItemIcon>
-                <InfoIcon />
-                </ListItemIcon>
-                <ListItemText primary={"About"} />
-            </ListItemButton>
-            </ListItem>
-
-        <ListItem disablePadding>
-            <ListItemButton component={Link} to="/create" selected={"/create" === path}>
-                <ListItemIcon>
-                <CreateIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Create"} />
-            </ListItemButton>
-            </ListItem>
-        </List>
+        <div>
+            <Toolbar />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="/" selected={"/" === path}>
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Home"} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="/about" selected={"/about" === path}>
+                        <ListItemIcon>
+                            <InfoIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"About"} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton component={Link} to="/create" selected={"/create" === path}>
+                        <ListItemIcon>
+                            <CreateIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Create"} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
         </div>
     );
 
-  // Remove this const when copying and pasting into your project.
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-    <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar
-            position="fixed"
-            sx={{
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            ml: { sm: `${drawerWidth}px` },
-            }}
-        >
-        <Toolbar>
-            <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "none" } }}
+        <Box sx={{ display: "flex" }}>
+            <CssBaseline />
+            <AppBar
+                position="fixed"
+                sx={{
+                    width: { sm: `calc(100% - ${drawerWidth}px)` },
+                    ml: { sm: `${drawerWidth}px` },
+                }}
             >
-            <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-                Twister
-            </Typography>
-        </Toolbar>
-        </AppBar>
-        <Box
-            component="nav"
-            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-            aria-label="mailbox folders"
-        >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onTransitionEnd={handleDrawerTransitionEnd}
-            onClose={handleDrawerClose}
-            ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-                display: { xs: "block", sm: "none" },
-                "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-            }}
+                <Toolbar id="navbar-top">
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={handleDrawerToggle}
+                        sx={{ mr: 2, display: { sm: "none" } }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" noWrap component={Link} to="/" sx={{ marginX: "auto" }}>
+                        <img src="/icons/logo.png" alt="Twister Logo" id="nav-logo" />
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Box
+                component="nav"
+                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                aria-label="mailbox folders"
             >
-            {drawer}
-            </Drawer>
-            <Drawer
-            variant="permanent"
-            sx={{
-                display: { xs: "none", sm: "block" },
-                "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-            }}
-            open
-            >
-            {drawer}
-            </Drawer>
-        </Box>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
-            <Toolbar />
-            {content}
-        </Box>
+                <Drawer
+                    container={container}
+                    variant="temporary"
+                    open={mobileOpen}
+                    onTransitionEnd={handleDrawerTransitionEnd}
+                    onClose={handleDrawerClose}
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                    sx={{
+                        display: { xs: "block", sm: "none" },
+                        "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+                <Drawer
+                    variant="permanent"
+                    sx={{
+                        display: { xs: "none", sm: "block" },
+                        "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+                    }}
+                    open
+                >
+                    {drawer}
+                </Drawer>
+            </Box>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+                <Toolbar />
+                {content}
+            </Box>
         </Box>
     );
 }
