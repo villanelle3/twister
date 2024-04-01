@@ -1,10 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import AxiosInstance from './Axios';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, IconButton, useTheme, Typography, TextareaAutosize } from "@mui/material"
-import { Edit as EditIcon, Delete as DeleteIcon, } from '@mui/icons-material';
-import Dayjs from "dayjs"
-import { Link } from "react-router-dom"
+import React, {useState } from 'react';
+import { Box, useTheme, Typography, TextareaAutosize } from "@mui/material"
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import List from '@mui/material/List';
@@ -20,14 +15,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { FormControl } from '@mui/base/FormControl';
 import Grid from '@mui/material/Unstable_Grid2';
 import CheckIcon from '@mui/icons-material/Check';
-import Tweet from './Tweet';
 
-// import CheckIcon from '@mui/icons-material/Check';
+function Tweet(props) {
+    const { autor, data, texto, likes, replies, foto } = props;
 
-// import Grid from '@mui/material/Unstable_Grid2';
-
-
-function Home() {
     const [liked, setLiked] = useState(false);
     const [retweeted, setRetweet] = useState(false);
     const [replied, setReplied] = useState(false);
@@ -87,77 +78,9 @@ function Home() {
         lg: theme.breakpoints.values.lg, // Para telas grandes
     };
     
-    const [mydata, setMydata] = useState([]);
-
-    const GetData = () => {
-        AxiosInstance.get('project/').then((res) => {
-            setMydata(res.data);
-        });
-    };
-
-    useEffect(() => {
-        GetData();
-    }, []);
-
-    const columns = useMemo(
-        () => [
-            {
-                accessorKey: 'name', //access nested data with dot notation
-                header: 'Name',
-                size: 150,
-            },
-            {
-                accessorKey: 'status',
-                header: 'Status',
-                size: 150,
-            },
-            {
-                accessorKey: 'comments', //normal accessorKey
-                header: 'Comments',
-                size: 200,
-            },
-            {
-                accessorFn: (row) => Dayjs(row.start_data).format("DD-MM-YYYY"),   
-                header: 'Start date',
-                size: 150,
-            },
-            {
-                accessorFn: (row) => Dayjs(row.END_data).format("DD-MM-YYYY"),   
-                header: 'End date',
-                size: 150,
-            },
-            {
-                header: 'Actions',
-                size: 180,
-                accessorFn: () => null, // No need for an accessor function here
-                Cell: ({row}) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
-                        <IconButton color="secondary" LinkComponent={Link} to={`edit/${row.original.id}`}>
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton color="error" LinkComponent={Link} to={`delete/${row.original.id}`}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                ),
-            },
-        ],
-        []
-    );
-
-    const table = useMaterialReactTable({
-        columns,
-        data: mydata,
-    });
 
     return (
         <div>
-            {/* <h1 className="titles">Home</h1> */}
-            <ul>
-                {mydata.slice().reverse().map(item => (
-                <li key={item.id}>{item.name}</li>
-                ))}
-            </ul>
 
             {/* ------------------------------------------------ BLOCO D0 TWEEET------------------------------------------------ */}
             <React.Fragment>
@@ -167,7 +90,7 @@ function Home() {
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <img src="https://www.dicasdemulher.com.br/wp-content/uploads/2020/06/capa-e-girl.png" 
+                                    <img src={foto} 
                                     alt="Icon"
                                     className="ProfileIcon"/>
                                 </ListItemAvatar>
@@ -190,14 +113,14 @@ function Home() {
                                             fontSize: '0.8rem',
                                         },
                                     }}
-                                    primary="Maria Silva" 
+                                    primary={autor} 
                                     secondary={
                                         <Typography variant="body2" color="text.secondary">
-                                            <span>Jan 9, 2014</span>
+                                            <span>{data}</span>
                                             <span style={{ marginLeft: '0.5rem' }}>|</span>
-                                            <span style={{ marginLeft: '0.5rem' }}>125 likes</span>
+                                            <span style={{ marginLeft: '0.5rem' }}>{likes} likes</span>
                                             <span style={{ marginLeft: '0.5rem' }}>|</span>
-                                            <span style={{ marginLeft: '0.5rem' }}>0 Replies</span>
+                                            <span style={{ marginLeft: '0.5rem' }}>{replies} Replies</span>
                                         </Typography>
                                     }
                                 />
@@ -206,7 +129,7 @@ function Home() {
                     </Box>
                         <Box className="tweet" sx={{bgcolor: 'background.paper' }}>
                             <Typography variant="body1" align="left" className="tweet_text">
-                                Many desktop page editors page editors page editors now Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy.  
+                                {texto}
                             </Typography>
                             <Typography align="left" className="tweet_like">
                             <ButtonGroup variant="text" aria-label="Basic button group">
@@ -276,22 +199,9 @@ function Home() {
                 </Container> 
             </React.Fragment>
             {/* ---------------------------------------------------------------------------------------------------------------- */}
-            
-            <Tweet/>
-            
-            <MaterialReactTable 
-                table={table}
-                layoutMode="grid"
-                displayColumnDefOptions={{
-                    'mrt-row-actions': {
-                        size: 180,
-                        grow: false,
-                    },
-                }}
-                enableRowActions
-            />
+        
         </div>
     );
 }
 
-export default Home;
+export default Tweet;
