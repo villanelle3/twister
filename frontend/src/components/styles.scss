@@ -7,8 +7,96 @@ $black-shade: #2B2B2B;
 // font-family: 'Poppins', sans-serif; 
 // font-family: 'Roboto', sans-serif;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Always do this.. */
+.col-sm {
+    border: 0 solid $red-shade;
+  }
+  
+  /* Before the columns stack, do this */
+  @media (min-width: 576px) {
+    .col-sm:last-child {
+      border-width: 0 0 0 1px;
+    } 
+    .col-sm:first-child {
+      border-width: 0 1px 0 0;
+    }
+  }
+  
+  /* when the columns stack, do something else */
+  @media (max-width: 575px)  {
+    .col-sm {
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .col-sm:last-child {
+      border-color: lightgrey;
+      border-width: 0 0 0 0;
+    }
+    .col-sm {
+      border-color: lightgrey;
+      border-width: 0 0 1px 0;
+    }
+  }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+.sub {
+    position: relative;
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 100%;
+        height: 1px;
+        background-color: $red-shade;
+    }
+}
+
+.ajust_fonts{
+    font-size: 90%;
+    font-family: 'Roboto', sans-serif; 
+    @media only screen and (max-width: 768px) and (min-width: 601px) {
+        // Estilos para tablets
+        font-size: 60%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        // Estilos para celulares
+        font-size: 60%;
+    }
+
+    &_desc{
+        font-size: 75%;
+        color: $black-shade;
+        padding-left: 1%;
+        @media only screen and (max-width: 768px) and (min-width: 601px) {
+            // Estilos para tablets
+            font-size: 60%;
+        }
+    
+        @media only screen and (max-width: 600px) {
+            // Estilos para celulares
+            font-size: 60%;
+        }
+    }
+}
+
 .titles{
     font-family: 'Angkor', serif;
+}
+
+.input-container {
+    width: 100%; // Define a largura como 100%
+}
+
+.textarea {
+    width: 100%; // Define a largura do textarea como 100%
+    min-height: 50px; // Define uma altura mínima para o textarea
+    padding: 10px; // Adiciona um preenchimento interno
+    resize: none; // Desativa a redimensionamento do textarea
+    box-sizing: border-box; // Mantém o tamanho do textarea conforme definido
+    font-family: 'Roboto', sans-serif;
 }
 
 .ProfileIcon {
@@ -16,6 +104,28 @@ $black-shade: #2B2B2B;
     height: 70px; /* Define explicitamente a largura e a altura */
     object-fit: cover; /* Garante que a imagem preencha o contêiner */
     border-radius: 50%; /* Aplica o corte circular */
+}
+
+.desc{
+    height: 200px;
+    @media only screen and (max-width: 768px) and (min-width: 601px) {
+        // Estilos para tablets
+        height: 130px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        // Estilos para celulares
+        height: 130px;
+    }
+
+    &_icon{
+        color: $red-shade;
+    }
+}
+
+.ProfileIconPFP{
+    width: '100%'; // Defina o tamanho desejado aqui
+    height: 'auto'; // Mantém a proporção original da imagem
 }
 
 .ProfileName{
@@ -41,7 +151,6 @@ $black-shade: #2B2B2B;
     padding: 10px 40px 20px 40px;
 }
 
-
 .custom-box {
     background-color: white;
     min-height: 10vh;
@@ -51,6 +160,9 @@ $black-shade: #2B2B2B;
     padding: 15px;
 }
 
+.block-reply{
+    padding-bottom: 20px;
+}
 
 .BoxCreate {
     display: flex;

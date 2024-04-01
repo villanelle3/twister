@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AxiosInstance from './Axios';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, IconButton, useTheme, Typography } from "@mui/material"
+import { Box, IconButton, useTheme, Typography, TextareaAutosize } from "@mui/material"
 import { Edit as EditIcon, Delete as DeleteIcon, } from '@mui/icons-material';
 import Dayjs from "dayjs"
 import { Link } from "react-router-dom"
@@ -16,11 +16,68 @@ import Button from '@mui/material/Button';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SwapCallsIcon from '@mui/icons-material/SwapCalls';
+import SendIcon from '@mui/icons-material/Send';
+import { FormControl } from '@mui/base/FormControl';
+import Grid from '@mui/material/Unstable_Grid2';
+import CheckIcon from '@mui/icons-material/Check';
+
+
+// import CheckIcon from '@mui/icons-material/Check';
 
 // import Grid from '@mui/material/Unstable_Grid2';
 
 
 function Home() {
+    const [liked, setLiked] = useState(false);
+    const [retweeted, setRetweet] = useState(false);
+    const [replied, setReplied] = useState(false);
+    const [reply, setReply] = useState('');
+    const [alert, setAlert] = useState(false);
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault(); 
+        console.log('Formulário enviado:', reply);
+
+        setReply('');
+        setReplied(!replied);
+
+        setAlert(true);
+        setTimeout(() => {
+            setAlert(false);
+        }, 1500); // número de milissegundos
+    };
+
+    const handleLikeClick = () => {
+        setLiked(!liked);
+        if (liked){
+            console.log('desligar like para a api')
+        }else{
+            console.log('enviar like para a api')
+        }
+        
+    };
+
+    const handleRtwwetClick = () => {
+        setRetweet(!retweeted);
+        if (retweeted){
+            console.log('desligar o retweet para a api')
+        }else{
+            console.log('enviar retweet para a api')
+        }
+        
+    };
+
+    const handleReplyClick = () => {
+        setReplied(!replied);
+        if (replied){
+            console.log('esconder o form')
+        }else{
+            console.log('mostar o form')
+        }
+        
+    };
+
     const theme = useTheme();
 
     const maxWidth = {
@@ -102,6 +159,7 @@ function Home() {
                 ))}
             </ul>
 
+            {/* ------------------------------------------------ BLOCO D0 TWEEET------------------------------------------------ */}
             <React.Fragment>
                 <CssBaseline />
                 <Container maxWidth={maxWidth}>
@@ -138,6 +196,8 @@ function Home() {
                                             <span>Jan 9, 2014</span>
                                             <span style={{ marginLeft: '0.5rem' }}>|</span>
                                             <span style={{ marginLeft: '0.5rem' }}>125 likes</span>
+                                            <span style={{ marginLeft: '0.5rem' }}>|</span>
+                                            <span style={{ marginLeft: '0.5rem' }}>0 Replies</span>
                                         </Typography>
                                     }
                                 />
@@ -149,18 +209,73 @@ function Home() {
                                 Many desktop page editors page editors page editors now Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy.  
                             </Typography>
                             <Typography align="left" className="tweet_like">
-                                <ButtonGroup variant="text" aria-label="Basic button group">
-                                    <Button>Like<ThumbUpIcon sx={{fontSize: "medium", ml:1}}/></Button>
-                                    <Button><ReplyIcon sx={{fontSize: "large", mr:1}}/>Reply</Button>
-                                    <Button>Retweet<SwapCallsIcon sx={{fontSize: "large", ml:1}}/></Button>
-                                </ButtonGroup>
-                            </Typography>
-                        </Box>
-                </Container>
+                            <ButtonGroup variant="text" aria-label="Basic button group">
+                                {/* Botão Like */}
+                                <Button
+                                    sx={{ color: liked ? '#A20E0E' : '#2B2B2B' }} 
+                                    onClick={handleLikeClick}
+                                >
+                                    {liked ? 'Liked' : 'Like'}<ThumbUpIcon sx={{ fontSize: "medium", ml: 1 }} />
+                                </Button>
+                                {/* Botão Reply */}
+                                <Button
+                                    sx={{ color: '#2B2B2B' }} 
+                                    onClick={handleReplyClick}
+                                >
+                                    <ReplyIcon sx={{ fontSize: "large", mr: 1 }} />Reply
+                                </Button>
+                                {/* Botão Retweet */}
+                                <Button
+                                    sx={{ color: retweeted ? 'info.main' : '#2B2B2B' }} 
+                                    onClick={handleRtwwetClick} // Adicione sua lógica de clique aqui
+                                >
+                                    {retweeted ? 'Undo Retweet' : 'Retweet'}<SwapCallsIcon sx={{ fontSize: "large", ml: 1 }} />
+                                </Button>
+                            </ButtonGroup>
+                            
+                            {alert ?
+                            <div style={{ color: "green" }}>
+                                Reply sent <CheckIcon style={{ fontSize: "medium", marginRight: "4px" }} />
+                            </div>
+                            : ""}
 
-                
-                
+                            </Typography>
+                            <div className='block-reply'>
+                                {replied ? 
+                                    <Container maxWidth="md">
+                                        <Box sx={{ flexGrow: 1 }}>
+                                            <form onSubmit={handleSubmit}>
+                                                <Grid container spacing={2}>
+                                                    <Grid xs={10}>
+                                                        <FormControl className="input-container"> {/* Aplicando a classe CSS */}
+                                                            <TextareaAutosize
+                                                                placeholder="Reply Tweet"
+                                                                value={reply}
+                                                                onChange={(e) => setReply(e.target.value)}
+                                                                className="textarea"
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid xs={2}>
+                                                        <Button
+                                                            variant="contained"
+                                                            endIcon={<SendIcon />}
+                                                            color="secondary"
+                                                            type='submit'
+                                                        >
+                                                            Send
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </form>
+                                        </Box>
+                                    </Container>
+                                : ""}
+                            </div>
+                        </Box>
+                </Container> 
             </React.Fragment>
+            {/* ---------------------------------------------------------------------------------------------------------------- */}
 
             <MaterialReactTable 
                 table={table}
