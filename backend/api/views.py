@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions
-from .serializers import ProjectSerializer, ProjectManegerSerializer  # Make sure ProjectSerializer is imported
+from .serializers import ProjectSerializer, ProjectManegerSerializer, PostsSerializer, UserSerializer, LikesSerializer, FollowersSerializer  # Make sure ProjectSerializer is imported
 from rest_framework.response import Response
-from .models import Project, ProjectManeger  # Make sure Project model is imported
-
-# Create your views here.
+from .models import Project, ProjectManeger, Posts, CustomUser, Likes, Followers  # Make sure Project model is imported
 
 # def home(request):
 #     return HttpResponse("This is the homepage")
+
+# ----------------------------------------------------------------------------------------------------------------------------------
 
 class ProjectManegerViewSet(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
@@ -19,6 +19,50 @@ class ProjectManegerViewSet(viewsets.ViewSet):
         queryset = ProjectManeger.objects.all()
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+
+    def list(self, request):
+        queryset = CustomUser.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+class LikesViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = Likes.objects.all()
+    serializer_class = LikesSerializer
+
+    def list(self, request):
+        queryset = Likes.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+class PostViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = Posts.objects.all()
+    serializer_class = PostsSerializer
+
+    def list(self, request):
+        queryset = Posts.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
+class FollowersViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = Followers.objects.all()
+    serializer_class = FollowersSerializer
+
+    def list(self, request):
+        queryset = Followers.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+# ----------------------------------------------------------------------------------------------------------------------------------
 
 class ProjectViewSet(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
@@ -43,7 +87,6 @@ class ProjectViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(project)
         return Response(serializer.data)
 
-
     def update(self, request, pk=None):
         project = self.queryset.get(pk=pk)
         serializer = self.serializer_class(project, data=request.data)
@@ -57,3 +100,6 @@ class ProjectViewSet(viewsets.ViewSet):
         project = self.queryset.get(pk=pk)
         project.delete()
         return Response(status=204)
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+
