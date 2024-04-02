@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { Container, Row, Col, Alert, Card } from 'react-bootstrap';
@@ -8,11 +8,40 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Tweet from './Tweet';
 import Lista from './Lista';
+import { useParams } from 'react-router-dom';
+import AxiosInstance from './Axios';
 
 function Perfil() {
-    const name = "Camille"
-    const lastname = "Kein";
-    const foto = "https://img.freepik.com/fotos-gratis/mulher-despreocupada-positiva-com-cabelo-encaracolado-vestido-com-capuz-sorri-alegremente-faz-gesto-de-paz-tira-selfie-em-local-urbano-estando-de-bom-humor-apos-treinamento-esportivo-pessoas-emocoes-e-estilo-de-vida-esportivo_273609-59906.jpg";
+    const { id } = useParams();
+    const myID = parseInt(id);
+
+    const [postsData, setPostsData] = useState([]);
+    const [usersData, setUsersData] = useState([]);
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        GetPostAndUserData();
+    }, [myID]);
+
+    const GetPostAndUserData = async () => {
+        try {
+            const [postsRes, usersRes] = await Promise.all([
+                AxiosInstance.get('posts/'),
+                AxiosInstance.get('user/')
+            ]);
+            setPostsData(postsRes.data);
+            setUsersData(usersRes.data);
+            const user = usersRes.data.find(user => user.id === myID);
+            setUserData(user);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const formatDate = (dateString) => {
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    };
 
     const [clickPosts, setClickPosts] = useState(true);
     const [clickSeguidores, setClickSeguidores] = useState(false);
@@ -23,36 +52,18 @@ function Perfil() {
             setClickSeguidores(false);
             setClickSeguindo(false);
             setClickPosts(true);
-            if (clickPosts){
-                console.log('Mostar posts')
-            }else{
-                console.log('Esconder posts')
-            }
-            
         };
 
         const handleSeguindoClick = () => {
             setClickSeguidores(false);
             setClickSeguindo(true);
             setClickPosts(false);
-            if (clickSeguindo){
-                console.log('Mostar seguindo')
-            }else{
-                console.log('Esconder seguindo')
-            }
-            
         };
 
         const handlesetClickSeguidores = () => {
             setClickSeguidores(true);
             setClickSeguindo(false);
             setClickPosts(false);
-            if (clickSeguidores){
-                console.log('Mostar seguidores')
-            }else{
-                console.log('Esconder seguidores')
-            }
-            
         };
 
         return (
@@ -74,38 +85,53 @@ function Perfil() {
                         </ButtonGroup>
                     </Col>
                 </Row>
-                {clickPosts ? <Posts/> : ""}
-                {clickSeguindo ? <Seguindo/> : ""}
-                {clickSeguidores ? <Seguidores/> : ""}
+                {clickPosts && <Posts userData={userData} postsData={postsData} />}
+                {clickSeguindo && <Seguindo />}
+                {clickSeguidores && <Seguidores />}
             </Container>
         );
     };
 
-    const Posts = () => {
+    const Posts = ({ userData, postsData }) => {
         return (
-        <>
-            <div className='mt-4'></div>
-            <Tweet autor={name + ' ' + lastname} data="Jan 9, 2014" texto="testando" likes="185" replies="3" foto={foto} />
-            <Tweet autor={name + ' ' + lastname} data="Jan 9, 2014" texto="testando 2" likes="185" replies="3" foto={foto} />
-            <Tweet autor={name + ' ' + lastname} data="Jan 9, 2014" texto="testando 3" likes="185" replies="3" foto={foto} />
-            <Tweet autor={name + ' ' + lastname} data="Jan 9, 2014" texto="testando 4" likes="185" replies="3" foto={foto} />
-        </>);
+            <>
+                <div className='mt-4'></div>
+                {postsData.slice().reverse().map((item) => {
+                    const userIndex = usersData.findIndex(user => user.id === item.dono);
+                    if (userIndex === -1 || userData === null || userData.id !== item.dono) return null;
+                    return (
+                        <Tweet
+                            key={item.id}
+                            autor={`${userData.first_name} ${userData.last_name}`}
+                            data={formatDate(item.data)}
+                            texto={item.texto}
+                            likes={item.like_count}
+                            replies={8}
+                            foto="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
+                            user_id={userIndex}
+                        />
+                    );
+                })}
+            </>
+        );
     };
 
     const Seguindo = () => {
         return (
-        <>
-            <div className='mt-4'></div>
-            <Lista seguidores={false}/>
-        </>);
+            <>
+                <div className='mt-4'></div>
+                <Lista seguidores={false}/>
+            </>
+        );
     };
 
     const Seguidores = () => {
         return (
-        <>
-            <div className='mt-4'></div>
-            <Lista seguidores={true}/>
-        </>);
+            <>
+                <div className='mt-4'></div>
+                <Lista seguidores={true}/>
+            </>
+        );
     };
 
     const PageOverview = () => {
@@ -133,7 +159,7 @@ function Perfil() {
         const CardText = styled(Card.Text)({
             '@media (max-width: 600px)': {
                 fontSize: '12px',
-                marginTop: '10px', // Adiciona margem superior em dispositivos móveis
+                marginTop: '10px', 
             },
             '@media (min-width: 601px) and (max-width: 960px)': {
                 fontSize: '14px',
@@ -154,15 +180,15 @@ function Perfil() {
                 <Card className="text-center" style={{ minHeight: '220px' }}>
                     <Row>
                         <Col sm={12} md={4}>
-                            <ProfileImage src={foto} 
+                            <ProfileImage src={userData ? userData.foto : ''} 
                                 alt="Icon"
                             />
                         </Col>
                         <Col sm={12} md={8}>
                             <Card.Body>
                                 <Title variant="h4">
-                                    <span className="sub">{name}</span>
-                                    <span> {lastname}</span>
+                                    <span className="sub">{userData ? userData.first_name : ''}</span>
+                                    <span> {userData ? userData.last_name : ''}</span>
                                 </Title>
                                 <CardText className='pt-3'>
                                     É necessário sempre acreditar que tudo é possível, sempre buscar pensamentos positivos apesar das horas turbulentas.
@@ -171,7 +197,7 @@ function Perfil() {
                                     <span><i className="bi bi-geo-fill"></i> São Paulo</span>
                                 </Subtitle>
                                 <Subtitle className="mb-2 text-muted">
-                                    <span><i class="bi bi-bookmark-heart-fill"></i> Viagens, Tecnologia, Natureza</span>
+                                    <span><i className="bi bi-bookmark-heart-fill"></i> Viagens, Tecnologia, Natureza</span>
                                 </Subtitle>
                             </Card.Body>
                         </Col>
@@ -188,7 +214,7 @@ function Perfil() {
 
     return (
         <div>
-            <PageOverview />
+            {userData && <PageOverview />}
             <GridComponent />
         </div>
     );

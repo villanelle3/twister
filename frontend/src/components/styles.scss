@@ -7,6 +7,11 @@ $black-shade: #2B2B2B;
 // font-family: 'Poppins', sans-serif; 
 // font-family: 'Roboto', sans-serif;
 
+.links{
+    text-decoration: none;
+    color: $black-shade;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Always do this.. */
 .col-sm {
