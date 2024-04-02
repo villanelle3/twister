@@ -15,9 +15,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { FormControl } from '@mui/base/FormControl';
 import Grid from '@mui/material/Unstable_Grid2';
 import CheckIcon from '@mui/icons-material/Check';
+import { Link } from 'react-router-dom';
 
 function Tweet(props) {
-    const { autor, data, texto, likes, replies, foto } = props;
+    const { id, autor, data, texto, likes, replies, foto, user_id } = props;
 
     const [liked, setLiked] = useState(false);
     const [retweeted, setRetweet] = useState(false);
@@ -90,7 +91,7 @@ function Tweet(props) {
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                             <ListItem>
                                 <ListItemAvatar>
-                                    <img src={foto} 
+                                    <img src={foto}  
                                     alt="Icon"
                                     className="ProfileIcon"/>
                                 </ListItemAvatar>
@@ -113,7 +114,7 @@ function Tweet(props) {
                                             fontSize: '0.8rem',
                                         },
                                     }}
-                                    primary={autor} 
+                                    primary={<Link className='links' to={`/profile/${user_id}`}>{autor}</Link>} 
                                     secondary={
                                         <Typography variant="body2" color="text.secondary">
                                             <span>{data}</span>

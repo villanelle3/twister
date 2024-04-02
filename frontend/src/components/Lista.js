@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 
 export default function Lista(props) {
-    const { seguidores } = props;
+    // const { seguidores } = props;
     return (
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <ListItem alignItems="flex-start">
